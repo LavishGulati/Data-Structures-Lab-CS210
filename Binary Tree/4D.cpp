@@ -47,7 +47,6 @@ node *createThreadedBT(){
         if(element == -1 && parent == -1) break;
 
         node *newNode = createNode(element);
-
         node *parentNode = find(root, parent);
 
         if(side == 'L'){
@@ -67,41 +66,36 @@ node *createThreadedBT(){
     return root;
 }
 
-void inorder(node *root){
+void preorder(node *root){
     node *temp = root;
     node *temp2 = NULL;
 
     while(1){
         while(temp != NULL){
+            cout << temp->data << " ";
             temp2 = temp;
             temp = temp->left;
         }
 
-        // if(temp2 == NULL){
-        //     cout << "behenchod temp2 tera baap dekehega" << endl;
-        //     return;
-        // }
-        // cout << temp2->data << endl;
-        // cout << temp2->rightThread << endl;
+        temp = temp2;
 
-        while(temp2->rightThread == true){
-            cout << temp2->data << " ";
-            temp = temp2;
-            temp2 = temp2->right;
-            if(temp2 == NULL) return;
+        if(temp->rightThread == false) temp = temp->right;
+        else{
+            while(temp->rightThread == true){
+                temp = temp->right;
+                if(temp == NULL) return;
+            }
+            temp = temp->right;
         }
 
-        cout << temp2->data << " ";
-        temp = temp2->right;
-
-        if(temp2 == NULL) break;
+        if(temp == NULL) break;
     }
 }
 
 int main(){
     node *root = createThreadedBT();
 
-    cout << "Inorder" << endl;
-    inorder(root);
+    cout << "Preorder" << endl;
+    preorder(root);
     cout << endl;
 }
