@@ -119,6 +119,7 @@ node *deleteFromBST(node *root, int element){
         if(element < parentNode->data) parentNode->left = child;
         else parentNode->right = child;
 
+        child->parent = parentNode;
         delete temp;
     }
 
