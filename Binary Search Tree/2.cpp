@@ -59,6 +59,7 @@ node *createBST(int flag){
 
 bool compareBST(node *root1, node *root2){
     if(root1 == NULL && root2 == NULL) return true;
+    if(root1 == NULL || root2 == NULL) return false;
 
     if(root1->data != root2->data) return false;
 
