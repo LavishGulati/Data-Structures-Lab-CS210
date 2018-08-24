@@ -38,6 +38,37 @@ node *constructBT(int *preorder, int ps, int pe, int *inorder, int is, int ie){
     return root;
 }
 
+/*
+node *constructBT2(int *preorder, int ps, int *inorder, int is, int length){
+    if(length <= 0) return NULL;
+
+    // if(length == 1){
+    //     node *root = createNode(preorder[ps]);
+    //     return root;
+    // }
+
+    node *root = createNode(preorder[ps]);
+
+    int rootId;
+    for(int i = is; i < is+length; i++){
+        if(inorder[i] == root->data){
+            rootId = i;
+            break;
+        }
+    }
+
+    int leftLength = rootId-is;
+    int rightLength = length-rootId-1;
+
+    node *leftChild = constructBT2(preorder, ps+1, inorder, is, leftLength);
+    node *rightChild = constructBT2(preorder, ps+leftLength+1, inorder, rootId+1, rightLength);
+    root->left = leftChild;
+    root->right = rightChild;
+
+    return root;
+}
+*/
+
 void inorderTraversal(node *root){
     if(root == NULL) return;
 
@@ -66,7 +97,10 @@ int main(){
     inputFile.close();
 
     node *root = constructBT(preorder, 0, n-1, inorder, 0, n-1);
+    // node *root2 = constructBT2(preorder, 0, inorder, 0, n);
 
     inorderTraversal(root);
     cout << endl;
+    // inorderTraversal(root2);
+    // cout << endl;
 }
