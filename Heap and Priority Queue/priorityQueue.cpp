@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <climits>
 using namespace std;
 
 struct heap{
@@ -23,13 +24,18 @@ void swap(int *array, int i, int j){
 }
 
 void insert(heap *newHeap, int element){
+    if(newHeap->size == newHeap->maxSize) return;
+
     (newHeap->size)++;
     newHeap->array[newHeap->size] = element;
 
     int i = newHeap->size;
-    while(i > 1 && newHeap->array[i] > newHeap->array[i/2]){
-        swap(newHeap->array, i, i/2);
-        i = i/2;
+    while(i > 1){
+        if(newHeap->array[i] > newHeap->array[i/2]){
+            swap(newHeap->array, i, i/2);
+            i = i/2;
+        }
+        else break;
     }
 }
 
@@ -42,47 +48,43 @@ int getMaxId(heap *newHeap, int i, int j, int k){
     return maxId;
 }
 
-void replace(heap *newHeap, int element){
-    newHeap->array[1] = element;
+void deleteHeap(heap *newHeap, int id){
+    newHeap->array[id] = INT_MIN;
 
-    int i = 1;
+    int i = id;
     while(i <= newHeap->size){
         int maxId = getMaxId(newHeap, i, 2*i, 2*i+1);
 
         if(maxId == i) break;
-        else if(maxId == 2*i){
-            swap(newHeap->array, i, 2*i);
-            i = 2*i;
+        else{
+            swap(newHeap->array, i, maxId);
+            i = maxId;
         }
-        else if(maxId == 2*i+1){
-            swap(newHeap->array, i, 2*i+1);
-            i = 2*i+1;
+    }
+
+    (newHeap->size)--;
+}
+
+int extract(heap *newHeap){
+    int answer = newHeap->array[1];
+    deleteHeap(newHeap, 1);
+    return answer;
+}
+
+void increaseKey(heap *newHeap, int id, int key){
+    if(key < newHeap->array[id]) return;
+
+    newHeap->array[id] = key;
+    int i = id;
+    while(i > 1){
+        if(newHeap->array[i] > newHeap->array[i/2]){
+            swap(newHeap->array, i, i/2);
+            i = i/2;
         }
+        else break;
     }
 }
 
 int main(){
-    int n;
-    cin >> n;
 
-    int *input = new int[n+1];
-    for(int i = 1; i <= n; i++) cin >> input[i];
-
-    int k;
-    cin >> k;
-
-    heap *newHeap = createHeap(k);
-
-    for(int i = 1; i <= k; i++){
-        insert(newHeap, input[i]);
-    }
-
-    for(int i = k+1; i <= n; i++){
-        if(input[i] < newHeap->array[1]) replace(newHeap, input[i]);
-    }
-
-    cout << newHeap->array[1] << endl;
-
-    delete input;
-    delete newHeap;
 }
