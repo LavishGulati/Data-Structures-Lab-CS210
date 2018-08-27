@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+// #include <ctime>
 #include <time.h>
 using namespace std;
 
@@ -104,6 +105,7 @@ int main(){
     heap *salary = buildHeap(&k);
     clock_t stop = clock();
 
+    // cout << stop-start << endl;
     cout << 1000*((double)stop-(double)start)/(CLOCKS_PER_SEC) << endl;
     // for(int i = 1; i <= salary->size; i++) cout << salary->heapArray[i] << " ";
     // cout << endl;
