@@ -2,10 +2,14 @@
 #include <fstream>
 using namespace std;
 
-void dfs(int currentNode, int **graph, bool **isPath, int n){
+void dfs(int parentNode, int currentNode, int **graph, bool **isPath, int n, string *color){
     for(int i = 0; i < n; i++){
-        if(graph[currentNode][i] == 1){
-            isPath[currentNode][i] = 1;
+        // cout << graph[currentNode][i] << ": " << color[i] << endl;;
+        if(graph[currentNode][i] == 1 && color[i] == "white"){
+            // cout << parentNode << ": " << i << endl;
+            isPath[parentNode][i] = true;
+            color[i] = "black";
+            dfs(parentNode, i, graph, isPath, n, color);
         }
     }
 }
@@ -33,11 +37,23 @@ int main(){
         for(int j = 0; j < n; j++) isPath[i][j] = false;
     }
 
+    string *color = new string[n];
+
     for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++){
-            if(!isPath[i][j]){
-                dfs(i, graph, isPath, n);
-            }
-        }
+        for(int j = 0; j < n; j++) color[j] = "white";
+        dfs(i, i, graph, isPath, n, color);
+    }
+
+    // for(int i = 0; i < n; i++){
+    //     cout << i << ": ";
+    //     for(int j = 0; j < n; j++){
+    //         if(graph[i][j] == 1) cout << j << " ";
+    //     }
+    //     cout << endl;
+    // }
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++) cout << isPath[i][j] << " ";
+        cout << endl;
     }
 }
