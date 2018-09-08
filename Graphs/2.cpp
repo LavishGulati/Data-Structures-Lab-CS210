@@ -79,7 +79,7 @@ void insert(graphNode *list, int element){
 
 void dfs(graphNode **graph, int n, string *color){
     stack *s = createStack();
-    int flag;
+    // int flag;
 
     for(int i = 0; i < n; i++){
         if(color[i] == "white"){
@@ -87,24 +87,29 @@ void dfs(graphNode **graph, int n, string *color){
             color[i] = "grey";
 
             while(s->size != 0){
-                flag = 0;
+                // flag = 0;
                 int currentNode = top(s);
                 // cout << char('a'+26-n+currentNode) << " ";
                 node *temp = graph[currentNode]->head;
-                
+
                 while(temp != NULL){
                     // cout << currentNode << " " << temp->data << endl;
                     if(color[temp->data] == "white"){
                         cout << "(" << char('a'+26-n+currentNode) << "," << char('a'+26-n+(temp->data)) << ")" << endl;
                         push(s, temp->data);
                         color[temp->data] = "grey";
-                        flag = 1;
+                        // flag = 1;
                         break;
                     }
                     temp = temp->next;
                 }
 
-                if(flag == 0){
+                // if(flag == 0){
+                //     color[top(s)] = "black";
+                //     pop(s);
+                // }
+
+                if(temp == NULL){
                     color[top(s)] = "black";
                     pop(s);
                 }
