@@ -75,7 +75,7 @@ node *findSuccessor(node *root){
     }
     else{
         node *parentNode = temp->parent;
-        while(parentNode != NULL && temp != parentNode->right){
+        while(parentNode != NULL && temp == parentNode->right){
             temp = parentNode;
             parentNode = parentNode->parent;
         }
