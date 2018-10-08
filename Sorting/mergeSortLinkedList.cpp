@@ -47,27 +47,39 @@ void swap(node *temp1, node *temp2){
     temp2->data = x;
 }
 
-void bubbleSort(node *head){
-    node *temp = head;
-    while(temp->next != NULL) temp = temp->next;
+node *mergeSort(node *head, int size){
+    if(size <= 1) return;
 
-    while(temp != head){
-        node *prev = head;
-        while(1){
-            if(prev->data > prev->next->data){
-                swap(prev, prev->next);
-            }
-            if(prev->next == temp) break;
-            prev = prev->next;
-        }
-        // printList(head);
-        temp = prev;
+    int count = 1;
+    node *temp = head;
+    while(count != size/2){
+        count++;
+        temp = temp->next;
     }
+
+    node *head2 = temp->next;
+    temp->next = NULL;
+
+    node *newHead = mergeSort(head, count);
+    node *newHead2 = mergeSort(head, size-count);
+
+    
+}
+
+void mergeSort(node *head){
+    int count = 0;
+    node *temp = head;
+    while(temp != NULL){
+        temp = temp->next;
+        count++;
+    }
+
+    return mergeSort(head, n);
 }
 
 int main(){
     node *head = inputLinkedList();
 
-    bubbleSort(head);
+    mergeSort(head);
     printList(head);
 }
