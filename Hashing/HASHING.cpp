@@ -1,17 +1,17 @@
 #include<iostream>
 #include<string>
 using namespace std;
-//template<typename V>
+template<typename V>
 
 //MAPPING FROM STRING TO INTEGER
 
 class MapNode{
 public:
 	string key;
-	int value;
+	V value;
 	MapNode *next;
 
-	MapNode(string key,int value){
+	MapNode(string key,V value){
 		this->key=key;
 		this->value=value;
 		this->next=NULL;
@@ -22,8 +22,9 @@ public:
 	}
 };
 
+template<typename V>
 class OurMap{
-	MapNode **buckets;
+	MapNode<V> **buckets;
 	int count;
 	int numBuckets;
 
@@ -31,7 +32,7 @@ class OurMap{
 		int len=0;
 		for(int i=0;key[i];i++){
 			len++;
-		}  // Can use key.length()
+		}
 		int help=1;
 		int ans=0;
 		for(int i=len-1;i>=0;i--){
@@ -44,7 +45,7 @@ class OurMap{
 
 public:
 	OurMap(int n){
-		this->buckets=new MapNode*[n];
+		this->buckets=new MapNode<V>*[n];
 		this->numBuckets=n;
 		this->count=0;
 		for(int i=0;i<n;i++){
@@ -63,10 +64,10 @@ public:
 		return this->count;
 	}
 
-	void insert(string key,int value){
+	void insert(string key,V value){
 		int hashCode=func(key);
 		int BucketIndex=(hashCode%(this->numBuckets));
-		MapNode *head=buckets[BucketIndex];
+		MapNode<V> *head=buckets[BucketIndex];
 		while(head!=NULL){
 			if(head->key==key){
 				head->value=value;
@@ -75,23 +76,23 @@ public:
 			head=head->next;
 		}
 		head=buckets[BucketIndex];
-		MapNode *node=new MapNode(key,value);
+		MapNode<V> *node=new MapNode<V>(key,value);
 		node->next=head;
 		buckets[BucketIndex]=node;
 		count++;
 	}
 
 
-	int remove(string key){
+	V remove(string key){
 		int hsh=func(key);
 		int index=hsh%numBuckets;
-		MapNode *head=buckets[index];
+		MapNode<V> *head=buckets[index];
 		if(head->key==key){
 			buckets[index]=head->next;
 			this->count--;
 			return head->value;
 		}
-		MapNode *prev=NULL;
+		MapNode<V> *prev=NULL;
 		while(head!=NULL){
 			if(head->key==key){
 				prev->next=head->next;
@@ -110,10 +111,10 @@ public:
 	}
 
 
-	int getValue(string key){
+	V getValue(string key){
 		int hsh=func(key);
 		int index=(hsh%(numBuckets));
-		MapNode *head=buckets[index];
+		MapNode<V> *head=buckets[index];
 		while(head!=NULL){
 			if(head->key==key){
 				return head->value;
@@ -126,7 +127,7 @@ public:
 	void display(){
 		for(int i=0;i<this->numBuckets;i++){
 			if(buckets[i]!=NULL){
-				MapNode *head=buckets[i];
+				MapNode<V> *head=buckets[i];
 				while(head!=NULL){
 					cout<<head->key<<"->"<<head->value<<endl;
 					head=head->next;
@@ -139,10 +140,11 @@ public:
 
 };
 
+
 int main(){
 	int n;
 	cin>>n;
-	OurMap *m=new OurMap(n);
+	OurMap<int> *m=new OurMap<int>(n);
 	m->insert("abc",2);
 	m->insert("abdg",4);
 	m->insert("abdg",5);
