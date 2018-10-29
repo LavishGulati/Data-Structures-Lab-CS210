@@ -36,18 +36,6 @@ class node{
 class avlTree{
     node *root;
 
-    // void updateHeight(node *head){
-    //     if(head->left == NULL) head->leftHeight = 0;
-    //     else{
-    //         head->leftHeight = max(head->left->leftHeight, head->left->rightHeight)+1;
-    //     }
-    //
-    //     if(head->right == NULL) head->rightHeight = 0;
-    //     else{
-    //         head->rightHeight = max(head->right->leftHeight, head->right->rightHeight)+1;
-    //     }
-    // }
-
     node *rotateLeft(node *head){
         node *a = head;
         node *b = head->right;
@@ -114,8 +102,6 @@ class avlTree{
                 head->left = newLeft;
                 node *newHead = rotateRight(head);
                 head = newHead;
-                // cout << head->left->data << " " << head->data << " " << head->right->data << endl;
-                // cout << head->left->parent->data << " " << head->right->parent->data << endl;
             }
         }
         else if(balanceFactor == 2){
@@ -186,23 +172,8 @@ public:
         if(key > prev->data) prev->right = newNode;
         else prev->left = newNode;
 
-        // rebalance(prev->parent);
         rebalance(prev);
 
-        // cout << root->data << endl;
-        // cout << root->parent << endl;
-        // if(root->left != NULL){
-        //     cout << "L: " << root->left->data << endl;
-        //     cout << "LP: " << root->left->parent->data << endl;
-        //     cout << "LL: " << root->left->left << endl;
-        //     cout << "LR: " << root->left->right << endl;
-        // }
-        // if(root->right != NULL){
-        //     cout << "R: " << root->right->data << endl;
-        //     cout << "RP: " << root->right->parent->data << endl;
-        //     cout << "RL: " << root->right->left << endl;
-        //     cout << "RR: " << root->right->right << endl;
-        // }
         return true;
     }
 
@@ -210,13 +181,34 @@ public:
         inorder(root);
         cout << endl;
     }
+
+    node *search(int key){
+        node *temp = root;
+        while(temp != NULL){
+            if(temp->data == key) return temp;
+
+            if(key < temp->data) temp = temp->left;
+            else temp = temp->right;
+        }
+
+        return NULL;
+    }
+
+    void deleteKey(int key){
+        node *temp = search(key);
+        if(temp == NULL){
+            cout << "Key " << key << " not found" << endl;
+        }
+
+        /* Delete key code */
+    }
 };
 
 int main(){
     avlTree *tree = new avlTree();
 
-    int choice;
-    do{
+    int choice, key;
+    while(true){
         cout << "1. Create new tree" << endl;
         cout << "2. Add new key to the tree" << endl;
         cout << "3. Search a key in the tree" << endl;
@@ -227,39 +219,53 @@ int main(){
         cin >> choice;
         cout << endl;
 
-        switch(choice){
-            case 1:
-                if(tree != NULL){
-                    delete tree;
-                }
-                tree = new avlTree();
-                break;
-
-            case 2:
-                if(tree == NULL){
-                    cout << "Create a tree first" << endl;
-                    break;
-                }
-                int key;
-                cout << "Enter key to add: ";
-                cin >> key;
-                if(tree->insertNode(key)){
-                    cout << "Inserted key: " << key << endl;
-                }
-                else cout << "Could not insert key" << endl;
-                cout << endl;
-                break;
-
-            case 5:
-                if(tree == NULL){
-                    cout << "Create a new tree first" << endl;
-                    break;
-                }
-                tree->inorder();
-                break;
-
-            default:
-                return 0;
+        if(choice == 1){
+            if(tree != NULL){
+                delete tree;
+            }
+            tree = new avlTree();
         }
-    } while(true);
+        else if(choice == 2){
+            if(tree == NULL){
+                cout << "Create a tree first" << endl;
+                continue;
+            }
+            cout << "Enter key to add: ";
+            cin >> key;
+            if(tree->insertNode(key)){
+                cout << "Inserted key: " << key << endl;
+            }
+            else cout << "Could not insert key" << endl;
+            cout << endl;
+        }
+        else if(choice == 3){
+            if(tree == NULL){
+                cout << "Create a new tree first" << endl;
+                continue;
+            }
+            cout << "Enter key to search: ";
+            cin >> key;
+            node *temp = tree->search(key);
+            if(temp == NULL) cout << "Key " << key << " not found" << endl << endl;
+            else cout << "Key " << key << " found" << endl << endl;
+        }
+        else if(choice == 4){
+            if(tree == NULL){
+                cout << "Create a new tree first" << endl;
+                break;
+            }
+            cout << "Enter key to delete: ";
+            cin >> key;
+            tree->deleteKey(key);
+            break;
+        }
+        else if(choice == 5){
+            if(tree == NULL){
+                cout << "Create a new tree first" << endl;
+                continue;
+            }
+            tree->inorder();
+        }
+        else break;
+    }
 }
