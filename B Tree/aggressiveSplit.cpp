@@ -49,7 +49,7 @@ class node{
         size++;
     }
 
-    void eagerInsert(int key){
+    void insert(int key){
         int i = size-1;
 
         if(isLeaf){
@@ -69,96 +69,7 @@ class node{
                 if(keys[i+1] < key) i++;
             }
 
-            children[i+1]->eagerInsert(key);
-        }
-    }
-
-    pair<int, node *> splitInsert(int key){
-        if(isLeaf){
-            if(size == 2*minDegree-1){
-                node *newNode = new node(minDegree, true);
-                newNode->size = minDegree-1;
-                size = minDegree-1;
-                for(int i = 0; i < minDegree-1; i++){
-                    newNode->keys[i] = keys[i+minDegree];
-                }
-
-                int k = keys[size];
-
-                node *insertRoot;
-                if(key < k) insertRoot = this;
-                else insertRoot = newNode;
-
-                int i = insertRoot->size - 1;
-                while(i >= 0 && insertRoot->keys[i] > key){
-                    insertRoot->keys[i+1] = insertRoot->keys[i];
-                    i--;
-                }
-
-                insertRoot->keys[i+1] = key;
-                insertRoot->size++;
-                return mp(k, newNode);
-            }
-            else{
-                int i = size-1;
-                while(i >= 0 && keys[i] > key){
-                    keys[i+1] = keys[i];
-                    i--;
-                }
-
-                keys[i+1] = key;
-                size++;
-                return mp(-1, (node *)NULL);
-            }
-        }
-        else{
-            int i = size-1;
-            while(i >= 0 && keys[i] > key) i--;
-            pair<int, node *> p = children[i+1]->splitInsert(key);
-
-            if(p.second == NULL) return p;
-            else if(size == 2*minDegree-1){
-                node *newNode = new node(minDegree, isLeaf);
-                newNode->size = minDegree-1;
-                size = minDegree-1;
-                for(int i = 0; i < minDegree-1; i++){
-                    newNode->keys[i] = keys[i+minDegree];
-                }
-                for(int i = 0; i < minDegree; i++){
-                    newNode->children[i] = children[i+minDegree];
-                }
-
-                int k = keys[size];
-
-                node *insertRoot;
-                if(p.first < k) insertRoot = this;
-                else insertRoot = newNode;
-
-                int i = insertRoot->size - 1;
-                while(i >= 0 && insertRoot->keys[i] > key){
-                    insertRoot->keys[i+1] = insertRoot->keys[i];
-                    insertRoot->children[i+2] = insertRoot->children[i+1];
-                    i--;
-                }
-
-                insertRoot->keys[i+1] = p.first;
-                insertRoot->children[i+2] = p.second;
-                insertRoot->size++;
-                return mp(k, newNode);
-            }
-            else{
-                int i = size-1;
-                while(i >= 0 && keys[i] > p.first){
-                    keys[i+1] = keys[i];
-                    children[i+2] = children[i+1];
-                    i--;
-                }
-
-                keys[i+1] = p.first;
-                children[i+2] = p.second;
-                size++;
-                return mp(-1, (node *)NULL);
-            }
+            children[i+1]->insert(key);
         }
     }
 
@@ -218,10 +129,10 @@ class bTree{
             if(root != NULL) root->deleteNode();
         }
 
-        void eagerInsert(int key){
+        void insert(int key){
             if(root == NULL){
                 root = new node(minDegree, true);
-                root->eagerInsert(key);
+                root->insert(key);
                 return;
             }
 
@@ -232,46 +143,13 @@ class bTree{
                 newRoot->split(0, root);
 
                 if(newRoot->keys[0] < key){
-                    newRoot->children[1]->eagerInsert(key);
+                    newRoot->children[1]->insert(key);
                 }
-                else newRoot->children[0]->eagerInsert(key);
+                else newRoot->children[0]->insert(key);
 
                 root = newRoot;
             }
-            else root->eagerInsert(key);
-        }
-
-        void splitInsert(int key){
-            if(root == NULL){
-                root = new node(minDegree, true);
-                root->splitInsert(key);
-                return;
-            }
-
-            if(root->isLeaf && root->size == 2*minDegree-1){
-                node *newRoot = new node(minDegree, false);
-                newRoot->children[0] = root;
-                newRoot->split(0, root);
-
-                if(newRoot->keys[0] < key){
-                    newRoot->children[1]->splitInsert(key);
-                }
-                else newRoot->children[0]->splitInsert(key);
-
-                root = newRoot;
-            }
-            else{
-                pair<int, node *> p = root->splitInsert(key);
-
-                if(p.second != NULL){
-                    node *newRoot = new node(minDegree, false);
-                    newRoot->children[0] = root;
-                    newRoot->keys[0] = p.first;
-                    newRoot->children[1] = p.second;
-                    newRoot->size = 1;
-                    root = newRoot;
-                }
-            }
+            else root->insert(key);
         }
 
         node *search(int key){
@@ -320,8 +198,7 @@ int main(){
             int key;
             cout << "Enter key to add: ";
             cin >> key;
-            // tree->eagerInsert(key);
-            tree->splitInsert(key);
+            tree->insert(key);
             cout << "Key " << key << " inserted into the B-tree\n\n";
         }
 
