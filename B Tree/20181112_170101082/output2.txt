@@ -1,0 +1,1 @@
+Answer: This can be a valid B Tree.

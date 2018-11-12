@@ -295,7 +295,7 @@ int main(){
             node *result = tree->search(key);
 
             if(result == NULL){
-                cout << "Key " << key << "not found\n\n";
+                cout << "Key " << key << " not found\n\n";
             }
             else cout << "Key " << key << " found\n\n";
         }

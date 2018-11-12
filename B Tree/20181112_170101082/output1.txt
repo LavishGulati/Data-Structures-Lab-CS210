@@ -1,0 +1,2 @@
+Answer: This cannot be a valid B Tree.
+Reason: 3 and 4 are a pair of leaf nodes that do not have the same depth.

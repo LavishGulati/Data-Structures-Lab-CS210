@@ -79,13 +79,13 @@ class avlTree{
         a->parent = b;
 
         a->updateHeight();
-        a->updateHeight();
+        b->updateHeight();
 
         head = b;
         return head;
     }
 
-    node *rebalance(node *head){
+    void rebalance(node *head){
         head->updateHeight();
 
         int balanceFactor = head->rightHeight - head->leftHeight;
@@ -121,11 +121,8 @@ class avlTree{
 
         if(head->parent == NULL) root = head;
         else{
-            node *newParent = rebalance(head->parent);
-            head->parent = newParent;
+            rebalance(head->parent);
         }
-
-        return head;
     }
 
     void inorder(node *head){
@@ -144,9 +141,39 @@ class avlTree{
         inorder(head->right);
     }
 
+    node *maximum(node *head){
+        node *temp = head;
+        while(temp->right != NULL) temp = temp->right;
+        return temp;
+    }
+
+    node *predecessor(node *head){
+        if(head->left != NULL) return maximum(head->left);
+
+        node *temp = head;
+        node *parentNode = head->parent;
+        while(parentNode != NULL && parentNode->right != temp){
+            temp = parentNode;
+            parentNode = temp->parent;
+        }
+        return parentNode;
+    }
+
+    void deleteNode(node *head){
+        if(head != NULL){
+            deleteNode(head->left);
+            deleteNode(head->right);
+            delete head;
+        }
+    }
+
 public:
     avlTree(){
         root = NULL;
+    }
+
+    ~avlTree(){
+        deleteNode(root);
     }
 
     bool insertNode(int key){
@@ -194,13 +221,56 @@ public:
         return NULL;
     }
 
-    void deleteKey(int key){
-        node *temp = search(key);
-        if(temp == NULL){
-            cout << "Key " << key << " not found" << endl;
+    void deleteKey(node *temp){
+        node *parentNode = temp->parent;
+
+        if(temp->left == NULL && temp->right == NULL){
+
+            if(temp == root){
+                root = NULL;
+                return;
+            }
+
+            parentNode = temp->parent;
+            if(parentNode->left == temp) parentNode->left = NULL;
+            else parentNode->right = NULL;
+
+            delete temp;
+
+            rebalance(parentNode);
+            return;
+        }
+        else if(temp->left == NULL || temp->right == NULL){
+
+            if(temp == root){
+                root = temp->left != NULL ? temp->left : temp->right;
+                delete temp;
+                return;
+            }
+
+            parentNode = temp->parent;
+            node *childNode = temp->left == NULL ? temp->right : temp->left;
+
+            if(parentNode->left == temp){
+                parentNode->left = childNode;
+                childNode->parent = parentNode;
+            }
+            else{
+                parentNode->right = childNode;
+                childNode->parent = parentNode;
+            }
+
+            delete temp;
+            rebalance(parentNode);
+            return;
         }
 
-        /* Delete key code */
+        node *pred = predecessor(temp);
+        int swap = temp->data;
+        temp->data = pred->data;
+        pred->data = swap;
+
+        deleteKey(pred);
     }
 };
 
@@ -252,12 +322,15 @@ int main(){
         else if(choice == 4){
             if(tree == NULL){
                 cout << "Create a new tree first" << endl;
-                break;
+                continue;
             }
             cout << "Enter key to delete: ";
             cin >> key;
-            tree->deleteKey(key);
-            break;
+
+            node *temp = tree->search(key);
+            if(temp == NULL) cout << "Key " << key << " not found" << endl;
+            else tree->deleteKey(temp);
+            cout << endl;
         }
         else if(choice == 5){
             if(tree == NULL){

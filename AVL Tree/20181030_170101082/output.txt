@@ -1,0 +1,33 @@
+Sequence of insertions: 50, 20, 80, 10, 30, 60, 90, 40, 70, 100
+
+Tree structure
+Node: 50  Parent: NULL
+Left Child: 20  Nodes in Left subtree: 4  Right Child: 80  Nodes in Right subtree: 5
+
+Node: 20  Parent: 50
+Left Child: 10  Nodes in Left subtree: 1  Right Child: 30  Nodes in Right subtree: 2
+
+Node: 80  Parent: 50
+Left Child: 60  Nodes in Left subtree: 2  Right Child: 90  Nodes in Right subtree: 2
+
+Node: 10  Parent: 20
+Left Child: NULL  Nodes in Left subtree: 0  Right Child: NULL  Nodes in Right subtree: 0
+
+Node: 30  Parent: 20
+Left Child: NULL  Nodes in Left subtree: 0  Right Child: 40  Nodes in Right subtree: 1
+
+Node: 60  Parent: 80
+Left Child: NULL  Nodes in Left subtree: 0  Right Child: 70  Nodes in Right subtree: 1
+
+Node: 90  Parent: 80
+Left Child: NULL  Nodes in Left subtree: 0  Right Child: 100  Nodes in Right subtree: 1
+
+Node: 40  Parent: 30
+Left Child: NULL  Nodes in Left subtree: 0  Right Child: NULL  Nodes in Right subtree: 0
+
+Node: 70  Parent: 60
+Left Child: NULL  Nodes in Left subtree: 0  Right Child: NULL  Nodes in Right subtree: 0
+
+Node: 100  Parent: 90
+Left Child: NULL  Nodes in Left subtree: 0  Right Child: NULL  Nodes in Right subtree: 0
+
